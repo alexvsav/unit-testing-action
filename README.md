@@ -1,13 +1,12 @@
 <img alt="Ponicode Logo_product_hunt" target="_blank" src="https://uploads-ssl.webflow.com/5f85a5ab7da846bd78f988af/5fbedb0ac44e97553238dde5_Couv%20readme-Ponicode%20Unit%20Test.png"/>
 
-# Christmas disclaimer 🎅 
-
-Ho ho oh?, Ponicode Unit Test is not currently available.  
-Our GitHub Action is getting a facelift for the new year and the Ponicode elves are working hard to bring it back online. We promise you that it will be more beautiful than ever.  
+# Disclaimer 🦄
+Oh no 😱, Ponicode Unit Test is not currently available.  
+Our GitHub Action is getting a facelift and the Ponicode team is working hard to bring it back online. We promise you that it will be more beautiful than ever.  
+You can continue using Ponicode in VS Code for free.  
+Our unique unit test generating AI is available as a VS Code extension for you to create unit tests twice faster than ever. Go to [www.ponicode.com](https://ponicode.com) to get started.  
 We apologize for the disturbance it might cause on your code quality journey and we hope we will forgive us for it.  
-Ponicode Unit Test GitHub Action will be back live early January! Get ready for it. Meanwhile you can start automating your unit tests with our VS Code extension available for free on [www.ponicode.com](https://ponicode.com) or in the VS Code Marketplace.  
-If you have any questions please shoot us a message at ping(at)ponicode.com and we will get back to you asap.  
-
+If you have any questions please shoot us a message at ping(at)ponicode.com and we will get back to you asap.
 
 # 🦄 Automatically writes unit tests for your project 🦄
 
@@ -22,7 +21,7 @@ This github action generates automated unit tests for your JavaScript functions 
 ```
 
 
-Once the unit tests are written, use the [create pull request action](https://github.com/peter-evans/create-pull-request) to see the results in the branch of your choice
+Once the unit tests are written, use the [create pull request action](https://github.com/peter-evans/create-pull-request) to see the results in the branch of your choice.
 You can use the variable `steps.ponicode.outputs.ponicodeSummary`
 
 ```yaml
@@ -130,4 +129,4 @@ If you want to generate a LCOV coverage file, please run: `jest --coverage`.
 We would love to hear your feedback! Tell us what you loved and what you want us to improve about this action at feedback@ponicode.com, or feel free to open a Github Issue.<br />
 We also have a [Slack community channel](https://ponicode-community.slack.com/join/shared_invite/zt-fiq4fhkg-DE~a_FkJ7xtiZxW7efyA4Q#/), where people can ask for help if they encounter problems with our products and where we keep you informed about our latest releases.<br />
 If you want to know more about Ponicode and the different services we propose, check out our website [www.ponicode.com](https://ponicode.com)! <br /> <br/>
-<img alt="Ponicode Logo" src="https://avatars0.githubusercontent.com/u/49948625?s=200&v=4=200zx" width="100"/>
+<img alt="Ponicode Footer" src="./shared/footer.png" width="100%"/>
