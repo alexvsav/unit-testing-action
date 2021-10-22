@@ -20,6 +20,9 @@ inputs:
     description: 'String: branch on which the PR applies'
     required: true
     default: 'master'
+outputs:
+    impacted_files:
+      description: 'list of files where UT have been generated'
 runs:
   using: 'node12'
   main: 'release/index.js'
