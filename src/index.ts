@@ -35,6 +35,9 @@ async function run(): Promise<void> {
         if ((impactedFiles !== undefined) && (impactedFiles.length > 0)) {
             // Start Ponicode CLI on the impacted files only
             await CLI.startCLI(actionInputs, impactedFiles);
+            // Outpu the action
+            core.setOutput("impacted_files", impactedFiles);
+
         }
 
     } catch (e) {

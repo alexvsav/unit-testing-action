@@ -4,10 +4,18 @@
 # 🦄 Grade your testing suite and automatically improve your code coverage!🦄
 **Ponicode SQUAR GitHub Action** is an action that enables you to  grade your testing suite and improve your code coverage accordingly at every Pull request!
 
-**Ponicode SQUAR GitHub Action** is the newest tool on the Ponicode platform to accelerate developers on their code quality journey
+Ponicode Unit-Testing Action automatically generates unit tests for the files of your PR
 
-# 💥 Benefits
-Tackle your code quality issues in the right order
+```yaml
+- uses: ponicode/unit-testing-action@master
+  id: ponicode
+  with:
+      repoPath: ./
+      authToken: ${{ secrets.PONICODE_TOKEN }}
+```
+
+
+
 
 - __GAIN VISIBILITY__ - Stop monitoring your code and start getting actionable code quality information
 - __FIND YOUR PRIORITIES__ - Prioritise your code quality efforts
