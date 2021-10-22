@@ -1,32 +1,26 @@
-name: "Ponicode Unit Test"
-description: "Writes unit tests for all your repository"
+name: 'Ponicode Unit Test'
+description: 'Raise high coverage in seconds with automatic Unit-Tests generation'
 branding:
-    icon: "align-justify"
-    color: "orange"
-inputs:
-    repoPath:
-        description: "Path of repo to generate unit tests for"
-        required: true
-        default: "./"
-    authToken:
-        description: "Ponicode token to use Ponicode API"
-        required: true
-        default: ""
-    changedFilesOnly:
-        description: "Boolean. Enter true to generate test for changes since last repo or enter false if you want to generate for the whole repo"
-        required: false
-        default: "false"
-    coverageJsonPath:
-        description: "String. Enter the path to your coverage-final.json (Example: coverage/coverage-final.json)"
-        required: false
+  icon: 'align-justify'  
+  color: 'orange'
+inputs: 
+  repoUrl:
+    description: 'String: URL of the repo to be processed'
+    required: true
+  ponicodeUtToken:
+    description: 'String: Ponicode UT user token from Github Secrets'
+    required: true
+  githubToken:
+    description: 'GitHub token to generate some comments into the PR'
+    required: true
+  impactedFiles:
+    description: 'String[]: List of the files updated in the PR'
+    required: true
+  branch:
+    description: 'String: branch on which the PR applies'
+    required: true
+    default: 'master'
 runs:
-    using: "docker"
-    image: "Dockerfile"
-    args:
-        - ${{ inputs.repoPath }}
-        - "--auth-token"
-        - ${{ inputs.authToken }}
-        - "--changed-files-only"
-        - ${{ inputs.changedFilesOnly}}
-        - "--coverage-json-path"
-        - ${{ inputs.coverageJsonPath}}
+  using: 'node12'
+  main: 'release/index.js'
+  

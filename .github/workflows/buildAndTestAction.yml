@@ -1,0 +1,32 @@
+name: "build-test"
+on:
+  pull_request:
+    types: [ opened, edited, synchronize ]  # rebuild any PRs and main branch changes
+
+jobs:
+  # make sure build/ci work properly
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - run: |
+        npm ci
+        npm install -g @vercel/ncc
+        npm run release
+        npm install -g ponicode
+    - id: get_changed_files
+      uses: jitterbit/get-changed-files@v1
+      continue-on-error: true
+      with:
+        format: 'json'
+    - id: extract_branch
+      if: github.event_name == 'pull_request'
+      run: echo "::set-output name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
+    - id: ponicode_unit_testing
+      uses: ./
+      with:
+        repoURL: ${{github.repository}}
+        impactedFiles: ${{ steps.get_changed_files.outputs.added_modified }}
+        branch: ${{ steps.extract_branch.outputs.BRANCH_NAME }}
+        ponicodeUtToken: ${{ secrets.PONICODE_TOKEN }}
+        githubToken: ${{ secrets.GITHUB_TOKEN }}

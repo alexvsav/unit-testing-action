@@ -1,132 +1,232 @@
-<img alt="Ponicode Logo_product_hunt" target="_blank" src="https://uploads-ssl.webflow.com/5f85a5ab7da846bd78f988af/5fbedb0ac44e97553238dde5_Couv%20readme-Ponicode%20Unit%20Test.png"/>
+<p align="center">
+<img src="https://ponicodefilesstorage.blob.core.windows.net/githubaction/Couv readme SQUAR GA.png">
 
-# Disclaimer 🦄
-Oh no 😱, Ponicode Unit Test is not currently available.  
-Our GitHub Action is getting a facelift and the Ponicode team is working hard to bring it back online. We promise you that it will be more beautiful than ever.  
-You can continue using Ponicode in VS Code for free.  
-Our unique unit test generating AI is available as a VS Code extension for you to create unit tests twice faster than ever. Go to [www.ponicode.com](https://ponicode.com) to get started.  
-We apologize for the disturbance it might cause on your code quality journey and we hope we will forgive us for it.  
-If you have any questions please shoot us a message at ping(at)ponicode.com and we will get back to you asap.
+# 🦄 Grade your testing suite and automatically improve your code coverage!🦄
+**Ponicode SQUAR GitHub Action** is an action that enables you to  grade your testing suite and improve your code coverage accordingly at every Pull request!
 
-# 🦄 Automatically writes unit tests for your project 🦄
+**Ponicode SQUAR GitHub Action** is the newest tool on the Ponicode platform to accelerate developers on their code quality journey
 
-This github action generates automated unit tests for your JavaScript functions with the Ponicode AI engine (this action is currently a beta version)
+# 💥 Benefits
+Tackle your code quality issues in the right order
 
-```yaml
-- uses: ponicode/unit-testing-action@master
-  id: ponicode
-  with:
-      repoPath: ./
-      authToken: ${{ secrets.PONICODE_TOKEN }}
-```
+- __GAIN VISIBILITY__ - Stop monitoring your code and start getting actionable code quality information
+- __FIND YOUR PRIORITIES__ - Prioritise your code quality efforts
+- __RAISE YOUR CODE QUALITY FAST__ - Accelerate the remediation of your code quality weaknesses on your high risk functions
 
+# 🔎 How does it work
+- __Step 1__: Ponicode SQUAR GitHub Action generates a report for every PR where you can review the number of poorly tested critical functions and learn how to fix it.
+- __Step 2__: Ponicode SQUAR GitHub Action enables you to accelerate the remediation of these weaknesses by generating missing unit tests, test cases and edge cases on your PR.
 
-Once the unit tests are written, use the [create pull request action](https://github.com/peter-evans/create-pull-request) to see the results in the branch of your choice.
-You can use the variable `steps.ponicode.outputs.ponicodeSummary`
+# 😳 Why should I use this GitHub Action
+- Keep your risk sensitive code at a high test coverage
+- Avoids weaknesses from the most important function 
+- Reduce the chances of facing bugs in production
 
-```yaml
-# Creates pull request with all changes in file
-- name: Create Pull Request
-  uses: peter-evans/create-pull-request@v2
-  with:
-      token: ${{ secrets.GITHUB_TOKEN }}
-      commit-message: "[ponicode-pull-request] Ponicode found unit tests to write!"
-      branch: ponicode-tests
-      title: "[Ponicode] Unit tests created"
-      body: ${{ steps.ponicode.outputs.ponicodeSummary }}
-```
+# ⚙️ How to setup this action
 
-## Requirements
+### If it does not exist, create a yaml workflow file in your project
 
--   A [Ponicode](https://ponicode.com/) account
-
-## Terms of use
-
-When you use this action, Ponicode will send the content of all the JavaScript files of your project to the Ponicode API in order to provide you with relevant unit test suggestions. Some of your code might be stored to improve our prediction models, but it will never be shared with a third-party.
-
-# How to setup (You must follow steps 1 and 2 to make the action work)
-
-## **Step 1**: Create a yaml workflow file in your project
+Add the following lines to any of your Github Action workflow.
 
 Go to the root of your project, and create the path to your workflow file. For example
-
 ```
 mkdir -p .github/workflows
 ```
+You can also just create a folder named ``.github``, in it create another folder named ``workflows``. You can now create a YAML file named **``ponicode.yml``** and copy one of the following example in it! <br />
 
-Here is an example of what to put in your `.github/workflows/ponicode.yml` file to trigger the action.
+### Existing workflow
+Here is what you must add in your ```.github/workflows/ponicode.yml``` file to activate and use Ponicode Squar Action  to trigger the action.
 
 ```yaml
-name: Ponicode unit test generation
-on:
-    push:
-        branches: [master]
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            # checkout your code with your git history (mandatory to changedFilesOnly option)
-            - uses: actions/checkout@v2
-              with:
-                  fetch-depth: 0
+  ponicode:
+    runs-on: ubuntu-latest
+    env:
+      SQUAR_API_URL: "https://ponicode-glados-prod.azurewebsites.net"
+      FETCH_REPORT_RETRY_MILLISEC: 5000
+  
+    steps:
+    - uses: actions/checkout@v1
+    - run: |
+        npm install -g ponicode
+    
+    # Identify which files are impacted by the Push / PR
+    - id: get_changed_files
+      uses: jitterbit/get-changed-files@v1
+      continue-on-error: true
+      with:
+        format: 'json'
 
-            # Unit tests your functions with Ponicode action
-            - uses: ponicode/unit-testing-action@master
-              id: ponicode
-              with:
-                  repoPath: ./
-                  authToken: ${{ secrets.PONICODE_TOKEN }}
+    # Extract branch name
+    - id: extract_branch
+      if: github.event_name == 'pull_request'
+      run: echo "::set-output name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
 
-              # Creates pull request with all changes in file
-            - name: Create Pull Request
-              uses: peter-evans/create-pull-request@v2
-              with:
-                  token: ${{ secrets.GITHUB_TOKEN }}
-                  commit-message: "[ponicode-pull-request] Ponicode found unit tests to write!"
-                  branch: ponicode-tests
-                  title: "[Ponicode] Unit tests created"
-                  body: ${{ steps.ponicode.outputs.ponicodeSummary }}
+    # Run Ponicode SQUAR action
+    - uses: ponicode/squar_action@public/master
+      with:
+        repoURL: ${{github.repository}} # DO NOT MODIFY
+        impactedFiles: ${{ steps.get_changed_files.outputs.added_modified }} # DO NOT MODIFY
+        branch: ${{ steps.extract_branch.outputs.BRANCH_NAME }} # DO NOT MODIFY
+        githubToken: ${{ secrets.GITHUB_TOKEN }} # DO NOT MODIFY
+        ponicodeSquarToken: ${{ secrets.PONICODE_SQUAR_TOKEN }}
+        ponicodeUtToken: ${{ secrets.PONICODE_TOKEN }}
+        bootstrapUT: 'true'
+        displayFullReport: 'true'
 ```
+### Once configured, this workflow:
 
-**This yaml file writes your unit tests everytime you push on master and makes a pull request on a ponicode-tests branch with the test files created**
+1. grades the code contained into the created / updated PR, and lists the alerts (= functions introduced / updated in the PR that are not / not-well tested)
+2. optionaly (if displayFullReport parameter is set to true): displays the SQUAR report for the whole project
+3. optionaly (if bootstrapUT parameter is set to true), bootstraps the (missing) unit-tests for the functions included in the PR into a dedicated new PR.
+![SQUAR + Unit-test generation workflow](https://ponicodefilesstorage.blob.core.windows.net/githubaction/ezgif.com-gif-maker.gif)
 
-## **Step 2:** Add your Ponicode token to github secrets
 
-To get a Ponicode token follow these steps:
+### Ponicode SQUAR Action parameters
+| Name | Description | Required | Default |
+|------|-------------|----------|---------|
+| ``bootstrapUT`` | Boolean: Set if missing Unit-Tests shall be automatically bootstraped by Ponicode (True) or not (False) | Yes | ``true`` |
+| ``displayFullReport`` | Boolean: set if Ponicode SQUAR report on the whole project shall be displayed as for information in the PR comment (True), or not (False) | Yes |``true`` |
+| ``ponicodeSquarToken`` | This parameter has to be configured as **``PONICODE_SQUAR_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode SQUAR app](https://squar.ponicode.com). | Yes | No default. This parameter must be set-up in your GITHUB SECRETS (see below on how to do that) |
+| ``ponicodeUtToken`` | This parameter has to be configured as **``PONICODE_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode UT Generation App](https:/:app.ponicode.com). | Yes if ``bootstrapUT`` is set to ``true``, No if not | No default. This parameter has to be set-up in your GITHUB SECRETS (see below on how to do that) |
 
--   Connect to your Ponicode member page at https://app.ponicode.com/actions
--   Copy your Ponicode token
+**NB: all the other parameters must be let un-changed, since they are automatically filled-in from previous steps in the workflow**
+- ``repoURL``
+- ``impactedFiles``
+- ``branch``
+- ``githubToken``
 
-To add the Ponicode token to your Github Secrets follow these steps:
+**NB2: you can find the procedure on how to setup Github Secrets here**: [Github Secrets setup](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
 
--   Open your project on Githubgi
--   Click on `Settings`
--   Click on `Secrets`
--   Click on `New Secret`
--   Name: `PONICODE_TOKEN`, Value: (Paste your token from VS code)
+# 👩‍💻 Use-Cases
+Here are some examples of ```.github/workflows/ponicode.yml``` file to setup Ponicode SQUAR Action
+#### 1. Raises Tests Quality alerts and bootstrap remediation Unit-Tests on each created / updated PR. Also includes Ponicode SQUAR report for the whole project.
+```yaml
+name: "ponicode-ci"
+on:
+  pull_request:
+    types: [ opened, edited, synchronize ]  # rebuild any PRs and main branch changes
 
-That's it! Once this is done, the action will be triggered on every push.
+jobs:
+  ponicode:
+    runs-on: ubuntu-latest
+    env:
+      SQUAR_API_URL: "https://ponicode-glados-prod.azurewebsites.net"
+      FETCH_REPORT_RETRY_MILLISEC: 5000
 
-# Ponicode Action inputs
+    steps:
+    - uses: actions/checkout@v1
+    - run: |
+        npm install -g ponicode
+    
+    # Identify which files are impacted by the Push / PR
+    - id: get_changed_files
+      uses: jitterbit/get-changed-files@v1
+      continue-on-error: true
+      with:
+        format: 'json'
 
-| Name               | Description                                                                                                                      | Required | Default |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------------------- | -------- | ------- |
-| `repoPath`         | The relative path in your repo to the files you want Ponicode to test. By default, Ponicode tests your whole repo.               | true     | `./`    |
-| `authToken`        | The Ponicode token. By default, the value is empty. The Ponicode secret is required for the action to work.                      | true     | ` `     |
-| `changedFilesOnly` | Decide if you want Ponicode to write the tests for the changes from your last commit(s) (`true`) or for the whole repo (`false`) | false    | `false` |
-| `coverageJsonPath` | If you already have an LCOV coverage file, you can add its path to calculate the coverage difference after ponicode run.         | false    |         |
+    # Extract branch name
+    - id: extract_branch
+      if: github.event_name == 'pull_request'
+      run: echo "::set-output name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
+    
+    # Run Ponicode SQUAR action
+    - uses: ponicode/squar_action@public/master
+      with:
+        repoURL: ${{github.repository}} # DO NOT MODIFY
+        impactedFiles: ${{ steps.get_changed_files.outputs.added_modified }} # DO NOT MODIFY
+        branch: ${{ steps.extract_branch.outputs.BRANCH_NAME }} # DO NOT MODIFY
+        githubToken: ${{ secrets.GITHUB_TOKEN }} # DO NOT MODIFY
+        ponicodeSquarToken: ${{ secrets.PONICODE_SQUAR_TOKEN }}
+        ponicodeUtToken: ${{ secrets.PONICODE_TOKEN }}
+        bootstrapUT: 'true'
+        displayFullReport: 'true'
+```
+#### 2. Raises Tests Quality alerts on files impacted by the PR, without bootstraping any remediation Unit-Tests. Also do not display Ponicode SQUAR report for the whole project.
+```yaml
+name: "ponicode-ci"
+on:
+  pull_request:
+    types: [ opened, edited, synchronize ]  # rebuild any PRs and main branch changes
 
-## Project compilation
+jobs:
+  ponicode:
+    runs-on: ubuntu-latest
+    env:
+      SQUAR_API_URL: "https://ponicode-glados-prod.azurewebsites.net"
+      FETCH_REPORT_RETRY_MILLISEC: 5000
 
-In order to get the test results, the github action use `npm install` to install your project''s dependencies and `npm run build` to build it. Please make sure your project is building before running the Ponicode github action.
+    steps:
+    - uses: actions/checkout@v1
+    - run: |
+        npm install -g ponicode
+    
+    # Identify which files are impacted by the Push / PR
+    - id: get_changed_files
+      uses: jitterbit/get-changed-files@v1
+      continue-on-error: true
+      with:
+        format: 'json'
 
-## Coverage file
+    # Extract branch name
+    - id: extract_branch
+      if: github.event_name == 'pull_request'
+      run: echo "::set-output name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
+    
+    # Run Ponicode SQUAR action
+    - uses: ponicode/squar_action@public/master
+      with:
+        repoURL: ${{github.repository}} # DO NOT MODIFY
+        impactedFiles: ${{ steps.get_changed_files.outputs.added_modified }} # DO NOT MODIFY
+        branch: ${{ steps.extract_branch.outputs.BRANCH_NAME }} # DO NOT MODIFY
+        githubToken: ${{ secrets.GITHUB_TOKEN }} # DO NOT MODIFY
+        ponicodeSquarToken: ${{ secrets.PONICODE_SQUAR_TOKEN }}
+        bootstrapUT: 'false'
+        displayFullReport: 'true'
+```
+# 🧐 Examples of SQUAR reporting in Pull-Requests
+### List of Testing Quality alerts on files impacted by a PR
+![Ponicode SQUAR for Delta](https://ponicodefilesstorage.blob.core.windows.net/githubaction/SQUAR_ACTION_on_delta.png)
+### Ponicode SQUAR report on the whole project
+![Ponicode SQUAR Full](https://ponicodefilesstorage.blob.core.windows.net/githubaction/SQUAR_ACTION_full_report.png)
 
-If you want to generate a LCOV coverage file, please run: `jest --coverage`.
+# 🤔 What is a critical piece of code ? 
+Ponicode research and development work enables us to fine tune a proprietary formula to spot the most important functions of your codebase. This formula is based on how much of an impact the function has on the overall behavior of your application. This translates into getting a better visibility over how likely a weakness in a function could generate an impactful bug for your software. Still unsure about what makes a high risk function? Here’s 2 weighted elements we put into our equation.
+- __Complexity to Repair__: Measure of how difficult a function is to intuitively understand and modify. This measure is between 0 and 1
+- __Impact of a function on the code-base__: Measure of how much the function is used in the project. This measure is between 0 and 1
 
-## Contact us
 
-We would love to hear your feedback! Tell us what you loved and what you want us to improve about this action at feedback@ponicode.com, or feel free to open a Github Issue.<br />
-We also have a [Slack community channel](https://ponicode-community.slack.com/join/shared_invite/zt-fiq4fhkg-DE~a_FkJ7xtiZxW7efyA4Q#/), where people can ask for help if they encounter problems with our products and where we keep you informed about our latest releases.<br />
-If you want to know more about Ponicode and the different services we propose, check out our website [www.ponicode.com](https://ponicode.com)! <br /> <br/>
-<img alt="Ponicode Footer" src="./shared/footer.png" width="100%"/>
+# ⽭ Supported languages and frameworks
+| Languague | Test Framework |
+|------|-------------|
+| TypeScript | [Jest](https://jestjs.io/) |
+| Javascript | [Jest](https://jestjs.io/) |
+
+
+# 📄 Terms of use
+By using this action, you will have to register on the [Ponicode platform](https://app.ponicode.com) and the [Ponicode SQUAR app](https://squar.ponicode.com). The terms & conditions of both apply when using this Github Action.
+
+**highlights to our Terms & Conditions**
+- Ponicode does not store your code
+- Ponicode use anonymous usage data to improve your experience 
+
+# 🪳Bug and feature Request
+Have a bug or a feature request? Please open a new [issue](https://github.com/ponicode/squar_action/issues) or reach out to us on the Ponicode Slack community https://ponicode-community.slack.com/join/shared_invite/zt-fiq4fhkg-DE~a_FkJ7xtiZxW7efyA4Q#/ using the channel #help or #feedback starting your message with “Ponicode SQUAR GitHub Action”
+
+We would love to have your feedback! Tell us what you love and what you want us to improve about this action!
+
+# 👯‍♀️ Community
+Our slack community is a place where people not only give feedback and get support but also an opportunity to share information and best ractices about code quality. It’s also where you will get premium access to our new products and first hand information about our latest releases. Join us here: https://ponicode-community.slack.com/join/shared_invite/zt-fiq4fhkg-DE~a_FkJ7xtiZxW7efyA4Q#/
+
+
+# Learn More
+Want to find out more about our project? All our solutions are available on [ponicode.com](https://ponicode.com)
+
+You can generate a [Ponicode SQUAR](https://squar.ponicode.com) report for any of your GitHub report straight from our platform. Get started on [Ponicode SQUAR Self Assessment](https://www.ponicode.com/squar-self-assessment)
+
+We also offer a unique [VS Code Extension](https://marketplace.visualstudio.com/items?itemName=ponicode.ponicode) to accelerate your unit testing efforts. 
+
+Our AI-powered unit testing bulk generation is also available in the command line interface. Go discover our [npm package](https://www.npmjs.com/package/ponicode) today! 
+
+We also have a [docstring generating GitHub Action](https://github.com/marketplace/actions/ponicode-dogstring-automatic-ai-based-docstring-generation) for Python 
