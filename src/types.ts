@@ -5,6 +5,7 @@ interface ActionInputs {
     branch: string;
     ponicodeUtToken: string;
     githubToken: string;
+    commentUTs: string;
 }
 
 export { ActionInputs };
