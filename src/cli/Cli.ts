@@ -11,10 +11,15 @@ import { TestFile } from "./types";
 class CLI {
 
     private files: string[] | undefined;
+    private actionInputs: ActionInputs;
 
-    public async login(inputs: ActionInputs, callback: () => void): Promise<void> {
+    constructor(actionInputs: ActionInputs) {
+        this.actionInputs = actionInputs;
+    }
+
+    public async login(callback: () => void): Promise<void> {
         core.debug("Authenticating Ponicode CLI");
-        await Login.setXdgConfigToken(inputs);
+        await Login.setXdgConfigToken(this.actionInputs);
 
         // DEBUG
         const confContent: string | undefined = Login.getConfigFileContent();
@@ -29,7 +34,7 @@ class CLI {
         });
     }
 
-    public async startCLI(inputs: ActionInputs, files: string[] | undefined): Promise<void> {
+    public async startCLI(files: string[] | undefined): Promise<void> {
         if (files !== undefined) {
             this.files = files;
             let fileArguments = "";
@@ -37,7 +42,7 @@ class CLI {
                 fileArguments += ` ${file}`;
             }
 
-            await this.login(inputs, () => {
+            await this.login(() => {
                 //DEBUG
                 core.debug(`Start generating Tests for ${files.toString()}`);
 
@@ -54,14 +59,14 @@ class CLI {
                         // PullRequest.generatePRComment(Markdown.createTestCodeComment(testFiles));
 
                         const check: number | undefined =
-                            await PullRequest.isPRExist(getPRBranchName(inputs), inputs.branch );
+                            await PullRequest.isPRExist(getPRBranchName(this.actionInputs), this.actionInputs.branch );
 
                         if (check !== undefined) {
                             core.debug("PR already exists, create a commit");
-                            PullRequest.createCommit(testFiles, inputs, check, Markdown);
+                            PullRequest.createCommit(testFiles, this.actionInputs, check, Markdown);
                         } else {
                             core.debug("PR does not exist: create the PR");
-                            PullRequest.createUTPullRequest(testFiles, inputs, Markdown);
+                            PullRequest.createUTPullRequest(testFiles, this.actionInputs, Markdown);
                         }
 
                     } else {
@@ -88,8 +93,13 @@ class CLI {
                     const testName: string = file.split(".")[0] + ".test." + file.split(".").pop();
 
                     if (fs.existsSync(testName)) {
-                        // Comment all lines of the test file
-                        this.commentAllLinesofFile(testName);
+
+                        if (this.actionInputs.commentUTs !== "true") {
+                            // Do nothing
+                        } else {
+                            // Comment all lines of the test file
+                            this.commentAllLinesofFile(testName);
+                        }
 
                         try {
                             const fileContent = fs.readFileSync(testName, "utf-8");
@@ -164,4 +174,4 @@ class CLI {
 
 }
 
-export default new CLI();
+export { CLI };

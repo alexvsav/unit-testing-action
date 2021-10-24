@@ -22,6 +22,7 @@ const parseActionInputs = (getInput: GetInput): ActionInputs => {
   const branch = getInput("branch", { required: true});
   const ponicodeUtToken = getInput("ponicodeUtToken", { required: true});
   const githubToken = getInput("githubToken", { required: true});
+  const commentUTs = getInput("commentUTs", { required: true });
 
   if (!impactedFiles) {
     impactedFiles = [];
@@ -32,7 +33,8 @@ const parseActionInputs = (getInput: GetInput): ActionInputs => {
     impactedFiles,
     branch,
     ponicodeUtToken,
-    githubToken
+    githubToken,
+    commentUTs
   };
 };
 

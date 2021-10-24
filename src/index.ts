@@ -1,6 +1,6 @@
 import * as core from "@actions/core";
 import * as dotenv from "dotenv";
-import CLI from "./cli/Cli";
+import { CLI } from "./cli/Cli";
 import { parseActionInputs } from "./inputs";
 import { ActionInputs } from "./types";
 
@@ -34,7 +34,8 @@ async function run(): Promise<void> {
 
         if ((impactedFiles !== undefined) && (impactedFiles.length > 0)) {
             // Start Ponicode CLI on the impacted files only
-            await CLI.startCLI(actionInputs, impactedFiles);
+            const cli: CLI = new CLI(actionInputs);
+            await cli.startCLI(impactedFiles);
             // Outpu the action
             core.setOutput("impacted_files", impactedFiles);
 

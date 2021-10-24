@@ -20,6 +20,9 @@ inputs:
     description: 'String: branch on which the PR applies'
     required: true
     default: 'master'
+  commentUTs:
+    description: 'Comment the generated UT'
+    required: true
 outputs:
     impacted_files:
       description: 'list of files where UT have been generated'
