@@ -4,7 +4,7 @@
 # 🦄 Automatically writes unit tests for your project🦄
 **Ponicode Unit-Testing GitHub Action** is an action that automatically raises your testing coverage by generating the Unit-Tests of your files in all you Pull-Requests!
 
-**Ponicode SQUAR GitHub Action** is the newest tool on the Ponicode platform to accelerate developers on their code quality journey
+**Ponicode Unit-Testing GitHub Action** is the newest tool on the Ponicode platform to accelerate developers on their code quality journey
 
 **Combined with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar)**, you can generate Unit-tests on files that require it based on Ponicode SQUAR report  
 
@@ -15,7 +15,7 @@
 
 
 # 🔎 How does it work
-- Ponicode SQUAR GitHub Action enables you to accelerate your coverage catch-up by generating missing unit tests, test cases and edge cases on your PR files.
+- Ponicode Unit-Testing GitHub Action enables you to accelerate your coverage catch-up by generating missing unit tests, test cases and edge cases on your PR files.
 
 # 😳 Why should I use this GitHub Action
 - Keep your codebase at a high test coverage
@@ -34,15 +34,12 @@ mkdir -p .github/workflows
 You can also just create a folder named ``.github``, in it create another folder named ``workflows``. You can now create a YAML file named **``ponicode.yml``** and copy one of the following example in it! <br />
 
 ### Existing workflow
-Here is what you must add in your ```.github/workflows/ponicode.yml``` file to activate and use Ponicode Squar Action  to trigger the action.
+Here is what you must add in your ```.github/workflows/ponicode.yml``` file to activate and use Ponicode Unit-Testing Action  to trigger the action.
 
 ```yaml
 jobs:
   ponicode:
     runs-on: ubuntu-latest
-    env:
-      SQUAR_API_URL: "https://ponicode-glados-prod.azurewebsites.net"
-      FETCH_REPORT_RETRY_MILLISEC: 5000
     steps:
     - uses: actions/checkout@v1
     - run: |
@@ -67,15 +64,18 @@ jobs:
         branch: ${{ steps.extract_branch.outputs.BRANCH_NAME }} # DO NOT MODIFY
         githubToken: ${{ secrets.GITHUB_TOKEN }} # DO NOT MODIFY
         ponicodeUtToken: ${{ secrets.PONICODE_TOKEN }} # DO NOT MODIFY
-        impactedFiles: ${{ steps.get_changed_files.outputs.added_modified }} # DO NOT MODIFY IF YOU WANT TO GENERATE TESTS ON SQUAR OUTCOME ONLY
+        impactedFiles: ${{ steps.get_changed_files.outputs.added_modified }} # DO NOT MODIFY IF YOU WANT TO GENERATE TESTS ON PR IMPACTED FILES ONLY
         commentUTs: "false"
 ```
 ### Once configured, this workflow:
 
 1. bootstraps the unit-tests for the functions included in the PR into a dedicated new PR.
 
+**Optionally**, combined with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar), it gives the following workflow (See Use-Cases section hereafter for more details)
+![SQUAR + Unit-test generation workflow](https://ponicodefilesstorage.blob.core.windows.net/githubaction/ezgif.com-gif-maker.gif)
 
-### Ponicode SQUAR Action parameters
+
+### Ponicode Unit-Testing Action parameters
 | Name | Description | Required | Default |
 |------|-------------|----------|---------|
 | ``ponicodeUtToken`` | This parameter has to be configured as **``PONICODE_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode UT Generation App](https:/:app.ponicode.com). | Yes if ``bootstrapUT`` is set to ``true``, No if not | No default. This parameter has to be set-up in your GITHUB SECRETS (see below on how to do that) |
@@ -90,7 +90,7 @@ jobs:
 **NB2: you can find the procedure on how to setup Github Secrets here**: [Github Secrets setup](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
 
 # 👩‍💻 Use-Cases
-Here are some examples of ```.github/workflows/ponicode.yml``` file to setup Ponicode SQUAR Action
+Here are some examples of ```.github/workflows/ponicode.yml``` file to setup Ponicode Unit-Testing Action
 #### 1. Raises Tests Quality alerts and bootstrap remediation Unit-Tests on each created / updated PR. Also includes Ponicode SQUAR report for the whole project.
 ```yaml
 name: "ponicode-ci"
@@ -153,9 +153,6 @@ on:
 jobs:
   ponicode:
     runs-on: ubuntu-latest
-    env:
-      SQUAR_API_URL: "https://ponicode-glados-prod.azurewebsites.net"
-      FETCH_REPORT_RETRY_MILLISEC: 5000
     steps:
     - uses: actions/checkout@v1
     - run: |
@@ -184,8 +181,8 @@ jobs:
         commentUTs: "false"
 ```
 # 🧐 Examples of SQUAR reporting in Pull-Requests
+When combining [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar) together with Ponicode Unit-Testing Action in your workflow, you get immediate feedbacks on the quality of your tests for the files impacted by the PR:
 ### List of Testing Quality alerts on files impacted by a PR
-When activating [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar) in your workflow, you get immediate feedbacks on the quality of your tests for the files impacted by the PR:
 ![Ponicode SQUAR for Delta](https://ponicodefilesstorage.blob.core.windows.net/githubaction/SQUAR_ACTION_on_delta.png)
 ### Ponicode SQUAR report on the whole project
 With [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar), you can also have exhaustive report on the quality of your tests for the whole project:
@@ -214,7 +211,7 @@ By using this action, you will have to register on the [Ponicode platform](https
 - Ponicode use anonymous usage data to improve your experience 
 
 # 🪳Bug and feature Request
-Have a bug or a feature request? Please open a new [issue](https://github.com/ponicode/squar_action/issues) or reach out to us on the Ponicode Slack community https://ponicode-community.slack.com/join/shared_invite/zt-fiq4fhkg-DE~a_FkJ7xtiZxW7efyA4Q#/ using the channel #help or #feedback starting your message with “Ponicode SQUAR GitHub Action”
+Have a bug or a feature request? Please open a new [issue](https://github.com/ponicode/unit-testing-action/issues) or reach out to us on the Ponicode Slack community https://ponicode-community.slack.com/join/shared_invite/zt-fiq4fhkg-DE~a_FkJ7xtiZxW7efyA4Q#/ using the channel #help or #feedback starting your message with “Ponicode Unit-Testing GitHub Action”
 
 We would love to have your feedback! Tell us what you love and what you want us to improve about this action!
 
