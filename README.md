@@ -69,7 +69,8 @@ jobs:
 ```
 ### Once configured, this workflow:
 
-1. bootstraps the unit-tests for the functions included in the PR into a dedicated new PR.
+1. bootstraps the unit-tests for the functions included in the PR into a dedicated new PR
+![Unit-tests generation workflow](https://ponicodefilesstorage.blob.core.windows.net/githubaction/gif_UT.gif)
 
 **Optionally**, combined with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar), it gives the following workflow (See Use-Cases section hereafter for more details)
 ![SQUAR + Unit-test generation workflow](https://ponicodefilesstorage.blob.core.windows.net/githubaction/ezgif.com-gif-maker.gif)
@@ -210,7 +211,7 @@ By using this action, you will have to register on the [Ponicode platform](https
 - Ponicode does not store your code
 - Ponicode use anonymous usage data to improve your experience 
 
-# 🪳Bug and feature Request
+# Bug and feature Request
 Have a bug or a feature request? Please open a new [issue](https://github.com/ponicode/unit-testing-action/issues) or reach out to us on the Ponicode Slack community https://ponicode-community.slack.com/join/shared_invite/zt-fiq4fhkg-DE~a_FkJ7xtiZxW7efyA4Q#/ using the channel #help or #feedback starting your message with “Ponicode Unit-Testing GitHub Action”
 
 We would love to have your feedback! Tell us what you love and what you want us to improve about this action!
