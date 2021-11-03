@@ -1,6 +1,6 @@
 {
   "name": "unit-testing-action",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "## Existing workflow",
   "main": "dist/index.js",
   "scripts": {
