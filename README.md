@@ -123,7 +123,7 @@ jobs:
       run: echo "::set-output name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
     
     # Run Ponicode SQUAR action
-    - uses: ponicode/squar_action@public/master
+    - uses: ponicode/squar_action@master
       id: ponicode_squar
       with:
         repoURL: ${{github.repository}} # DO NOT MODIFY
