@@ -9,3 +9,6 @@ dist
 ponicode-*.json
 **/ponicode_coverage/
 **/*.test*
+
+# POnicode Preprod
+.npmrc
