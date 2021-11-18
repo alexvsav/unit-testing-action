@@ -1,15 +1,16 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 import { Octokit } from "@octokit/core";
+import { OctokitResponse } from "@octokit/plugin-paginate-rest/dist-types/types";
 import { Octokit as OctokitRest } from "@octokit/rest";
 import { readFile } from "fs-extra";
 import { createPullRequest } from "octokit-plugin-create-pull-request";
 import { TestFile } from "../cli/types";
 import Markdown from "../markdown/Markdown";
-import { buildGithubPRURL, createSQUARErrorMessage } from "../markdown/utils";
+import { buildGithubPRURL, createErrorMessage } from "../markdown/utils";
 import { ActionInputs } from "../types";
 import { GitTree, TestFile4PR } from "./types";
-import { checkIfCommentALreadyExists, getAllComments, getPRBranchName } from "./utils";
+import { generatePRComment, getOriginalPullRequestNumber, getPRBranchName, getWorkingRepo } from "./utils";
 
 // get the inputs of the action. The "token" input
   // is not defined so far - we will come to it later.
@@ -17,10 +18,6 @@ const githubToken = core.getInput("githubToken");
 
 // the context does for example also include information
 // in the pull request or repository we are issued from
-const context = github.context;
-const repo = context.repo;
-const pullRequestNumber: number | undefined = context.payload.pull_request?.number;
-
 const octokit = github.getOctokit(githubToken);
 
 const PullRequestOctokit = Octokit.plugin(createPullRequest);
@@ -28,8 +25,8 @@ const PullRequestOctokit = Octokit.plugin(createPullRequest);
 class PullRequest {
 
     public async isPRExist(originBranch: string, targetBranch: string): Promise<number | undefined> {
-      const owner = repo.owner;
-      const repository = repo.repo;
+      const owner = getWorkingRepo().owner;
+      const repository = getWorkingRepo().repo;
       const { data } = await octokit.rest.pulls.list({
         owner: owner,
         repo: repository,
@@ -48,7 +45,7 @@ class PullRequest {
 
     }
 
-    public createUTPullRequest(testFiles: TestFile[], inputs: ActionInputs, markdown: typeof Markdown) {
+    public async createUTPullRequest(testFiles: TestFile[], inputs: ActionInputs, cliReport: ICLIReport | undefined) {
 
       const myOctokit = new PullRequestOctokit({
         auth: inputs.githubToken,
@@ -58,10 +55,10 @@ class PullRequest {
       // See https://octokit.github.io/rest.js/#octokit-routes-pulls-create
       myOctokit
         .createPullRequest({
-          owner: repo.owner,
-          repo: repo.repo,
+          owner: getWorkingRepo().owner,
+          repo: getWorkingRepo().repo,
           title: "Unit-Tests bootstrap by Ponicode",
-          body: this.generatePRBody(),
+          body: await Markdown.createUTPRComment(undefined, cliReport),
           base: inputs.branch /* optional: defaults to default branch */,
           head: getPRBranchName(inputs),
           draft: true,
@@ -74,91 +71,51 @@ class PullRequest {
             },
           ],
         })
-        .then(async (pr) => {
-          core.debug(`PR well created with number: ${pr?.data.number}`);
-          const url = buildGithubPRURL(repo.repo, repo.owner, pr?.data.number);
-          this.generatePRComment(await markdown.createUTPRComment(url, testFiles));
+        .then((pr) => {
+          this.prCreationHook(pr, cliReport);
         }).catch(async (e) => {
-          const error = e as Error;
-          core.debug(`ERROR While creating the PR: ${error.message}`);
-          // Push an error message in PR comment
-          const errorMessage = `Fails creating the branch ${getPRBranchName(inputs)}.
-            It seems that there is already a branch with the given name.
-            Either delete it, or create a PR on ${inputs.branch}`;
-          const message = await createSQUARErrorMessage(errorMessage, inputs.repoURL);
-          void this.generatePRComment(message);
+          this.prCreationFailureHook(e, inputs);
         });
 
     }
 
-  public async generatePRComment(message: string | undefined ): Promise<void> {
+    public async createCommit(testFiles: TestFile[], inputs: ActionInputs,
+                              prNumber: number, cliReport: ICLIReport | undefined): Promise<void> {
+      const octo = new OctokitRest({
+        auth: githubToken,
+      });
 
-    // The github module has a member called "context",
-    // which always includes information on the action workflow
-    // we are currently running in.
-    // For example, it let's us check the event that triggered the workflow.
-    if (github.context.eventName !== "pull_request") {
-      // The core module on the other hand let's you get
-      // inputs or create outputs or control the action flow
-      // e.g. by producing a fatal error
-      core.debug("Can only run on pull requests!");
-      return;
-    }
-
-    if (!message) {
-      core.debug("Message to display is empty");
-      return;
-    }
-
-    // The Octokit is a helper, to interact with
-    // the github REST interface.
-    // You can look up the REST interface
-    // here: https://octokit.github.io/rest.js/v18
-
-    if (pullRequestNumber) {
-
-      try {
-
-          /* un comment this if you want to keep only one Ponicode SQUAR report in the 
-          * comments of the PR, and it is updated in case there is alreayd one
-          */
-          const comments = await getAllComments(repo, pullRequestNumber);
-
-          const comment = await checkIfCommentALreadyExists(comments, message);
-
-          // If yes, update that
-          if (comment) {
-              core.debug("There is already one comment that matches, then delete it.");
-              // await updateComment(comment, message);
-              await this.deleteComment(comment);
-          // if not, create a new comment
-          } /*else {
-              core.debug("No comment matches, then create it.");
-              await createComment(repo, pullRequestNumber, message);
-          }*/
-
-        // Create the comment in the PR
-          await this.createComment(repo, pullRequestNumber, message);
-
-      } catch (e) {
-          const error = e as Error;
-          core.setFailed(error.message);
-      }
-    }
+      await this.uploadToRepo(octo, testFiles, getWorkingRepo().owner, getWorkingRepo().repo, getPRBranchName(inputs));
+      // update the message with more sophisitcated MD content
+      const url = buildGithubPRURL(getWorkingRepo().repo, getWorkingRepo().owner, prNumber);
+      const message = await Markdown.createUTPRComment(url, cliReport);
+      generatePRComment(getOriginalPullRequestNumber(), message, getWorkingRepo());
 
   }
 
-  public async createCommit(testFiles: TestFile[], inputs: ActionInputs,
-                            prNumber: number, markdown: typeof Markdown): Promise<void> {
-    const octo = new OctokitRest({
-      auth: githubToken,
-    });
+  private async prCreationHook(pr: OctokitResponse<any, number> | null, cliReport: ICLIReport | undefined):
+  Promise<void> {
+    // DEBUG
+    core.debug(`PR well created with number: ${pr?.data.number}`);
 
-    await this.uploadToRepo(octo, testFiles, repo.owner, repo.repo, getPRBranchName(inputs));
-    // update the message with more sophisitcated MD content
-    const url = buildGithubPRURL(repo.repo, repo.owner, prNumber);
-    this.generatePRComment(await markdown.createUTPRComment(url, testFiles));
+    const url = buildGithubPRURL(getWorkingRepo().repo, getWorkingRepo().owner, pr?.data.number);
+    const message = await Markdown.createUTPRComment(url, cliReport);
 
+    generatePRComment(getOriginalPullRequestNumber(), message, getWorkingRepo());
+  }
+
+  private async prCreationFailureHook(e: Error, inputs: ActionInputs): Promise<void> {
+    const error = e as Error;
+    // DEBUG
+    core.debug(`ERROR While creating the PR: ${error.message}`);
+
+    // Push an error message in PR comment
+    const errorMessage = `Fails creating the branch ${getPRBranchName(inputs)}.
+      It seems that there is already a branch with the given name.
+      Either delete it, or create a PR on ${inputs.branch}`;
+
+    const message = await createErrorMessage(errorMessage, inputs.repoURL);
+    generatePRComment(getOriginalPullRequestNumber(), message, getWorkingRepo());
   }
 
   private listUTFile(testFiles: TestFile[]): string {
@@ -172,15 +129,6 @@ class PullRequest {
     return list;
 
   }
-  private generatePRBody(): string  {
-    let body: string = "";
-    body += `This PR contains some proposal of Unit-Tests by Ponicode.`;
-
-    //body += this.listUTFile(testFiles);
-
-    return body;
-
-  }
 
   private generateFiles4PR(testFiles: TestFile[]): TestFile4PR {
     let result = {} as TestFile4PR;
@@ -189,20 +137,8 @@ class PullRequest {
       result[test.filePath] = test.content;
     });
 
-    // TODO: add a workflow YAML to test if project build in the CI
-
     return result;
   }
-
-    private async createComment(repo: any, pullRequestNumber: number, message: string): Promise<void> {
-      await octokit.rest.issues.createComment({
-          owner: repo.owner,
-          repo: repo.repo,
-          issue_number: pullRequestNumber,
-          body: message,
-      });
-
-    }
 
   /*private async updateComment(comment: any, message: string): Promise<void> {
       await octokit.rest.issues.updateComment({
@@ -212,14 +148,6 @@ class PullRequest {
           body: message,
       });
   }*/
-
-  private async deleteComment(comment: any): Promise<void> {
-    await octokit.rest.issues.deleteComment({
-        owner: repo.owner,
-        repo: repo.repo,
-        comment_id: comment.id,
-    });
-}
 
   /* Methods required to create a commit and push it on a branch */
   private uploadToRepo = async (

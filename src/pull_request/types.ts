@@ -15,6 +15,11 @@ interface GitTree {
     content?: string | undefined;
 }
 
+interface GithubRepo {
+    owner: string;
+    repo: string;
+}
+
 const PONICODE_UT_BRANCH = "ponicode-ut-proposal";
 
-export { PONICODE_UT_BRANCH, TestFile4PR, Commit, GitTree };
+export { PONICODE_UT_BRANCH, TestFile4PR, Commit, GitTree, GithubRepo };

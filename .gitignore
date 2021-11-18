@@ -4,3 +4,8 @@ dist
 
 # Environments
 .env
+
+#Ponicode reports
+ponicode-*.json
+**/ponicode_coverage/
+**/*.test*

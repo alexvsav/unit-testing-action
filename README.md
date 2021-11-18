@@ -23,6 +23,13 @@
 
 # ⚙️ How to setup this action
 
+### If you didn't do before, init ponicode on your project:
+```
+npm install -g ponicode
+ponicode init
+```
+In case you develop in a language that is supported by Ponicode TurboCov Dashboard, those commands will create a ```ponicode.config.json```. This file have to be indexed in your git repo. It permits you to have all your code quality insights available in your TurboCov Dashboard [here](https://app.ponicode.com/turbo-cov/projects/)
+
 ### If it does not exist, create a yaml workflow file in your project
 
 Add the following lines to any of your Github Action workflow.
@@ -44,6 +51,7 @@ jobs:
     - uses: actions/checkout@v1
     - run: |
         npm install -g ponicode
+        npm i --save-dev rewire @types/rewire jest@26 ts-jest@26 @types/jest
     
     # Identify which files are impacted by the Push / PR
     - id: get_changed_files
@@ -79,7 +87,7 @@ jobs:
 ### Ponicode Unit-Testing Action parameters
 | Name | Description | Required | Default |
 |------|-------------|----------|---------|
-| ``ponicodeUtToken`` | This parameter has to be configured as **``PONICODE_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode UT Generation App](https:/:app.ponicode.com). | Yes if ``bootstrapUT`` is set to ``true``, No if not | No default. This parameter has to be set-up in your GITHUB SECRETS (see below on how to do that) |
+| ``ponicodeUtToken`` | This parameter has to be configured as **``PONICODE_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode UT Generation App](https://app.ponicode.com). | Yes if ``bootstrapUT`` is set to ``true``, No if not | No default. This parameter has to be set-up in your GITHUB SECRETS (see below on how to do that) |
 | ``impactedFiles`` | Indicate on which files, Unit-Tests have to be generated | Yes | Default value is the ouput of ``get-changed-files`` step. When Combined with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar), the parameter is ``${{ steps.ponicode_squar.outputs.impacted_files }}`` |
 | ``commentUTs`` | Set to ``"true"`` to comment the genrated Unit-Tests, ``"false"`` if not. | Yes | Set to ``"false"`` by default. | 
 
@@ -109,6 +117,7 @@ jobs:
     - uses: actions/checkout@v1
     - run: |
         npm install -g ponicode
+        npm i --save-dev rewire @types/rewire jest@26 ts-jest@26 @types/jest
     
     # Identify which files are impacted by the Push / PR
     - id: get_changed_files
@@ -158,6 +167,7 @@ jobs:
     - uses: actions/checkout@v1
     - run: |
         npm install -g ponicode
+        npm i --save-dev rewire @types/rewire jest@26 ts-jest@26 @types/jest
     
     # Identify which files are impacted by the Push / PR
     - id: get_changed_files

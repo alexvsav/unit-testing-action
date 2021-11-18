@@ -1,61 +1,44 @@
 import * as core from "@actions/core";
-import { readFileSync } from 'fs';
-import { TestFile } from "../cli/types";
-
-const replace = require("replace-in-file");
-
-interface IMessageInputs {
-    file: string;
-    nb_tests: number;
-    url: string;
-    test_files: string;
-}
+import * as fs from "fs";
+import { IMessageInputs } from "./types";
+import { generateMessageFromMDFile4PR } from "./utils";
 
 class Markdown {
 
-    public async createUTPRComment(url: string | undefined, testFiles: TestFile[]): Promise<string> {
+    public async createUTPRComment(url: string | undefined, cliReport: ICLIReport | undefined): Promise<string> {
         let message: string = "";
+
+        let inputs: IMessageInputs;
+        const fileName = __dirname + "/pull_request.md";
+        const fileNameToUse = fileName + ".copy";
+        fs.copyFile(fileName, fileNameToUse, (err) => {
+            if (err) {
+                // DEBUG
+                core.debug(`Couldn't copy MD file to generate PR comment`);
+                return `ERROR while generating PR Comment: ${err.message}`;
+            }
+        });
 
         if (url !== undefined) {
 
-            let test_files: string = "";
-            testFiles.forEach((file: TestFile) => {
-                test_files += `- ${file.filePath}\n`;
-            });
-
-            const fileName = __dirname + "/pull_request.md";
-
-            const inputs: IMessageInputs = {
-                file: fileName,
-                nb_tests: testFiles.length,
-                url,
-                test_files,
+            inputs = {
+                file: fileNameToUse,
+                report: cliReport,
+                url: url,
             };
 
-            message += await this.generateMessageFromMDFile(inputs);
-
         } else {
-            message += "## Something wrong happened during the creation of the PR.";
+
+            inputs = {
+                file: fileNameToUse,
+                report: cliReport,
+                url: undefined,
+              };
         }
 
-        return message;
-    }
-
-    private async generateMessageFromMDFile(inputs: IMessageInputs): Promise<string> {
-        const options = {
-            files: inputs.file,
-            from: [/%nb_tests%/g, /%url%/g, /%list_of_tests%/g],
-            to: [ inputs.nb_tests, inputs.url, inputs.test_files ],
-        };
-
-        const results = await replace(options);
-        core.debug(results);
-
-        const message = readFileSync(inputs.file, "utf-8");
-        core.debug(message);
+        message += await generateMessageFromMDFile4PR(inputs);
 
         return message;
-
     }
 
 }

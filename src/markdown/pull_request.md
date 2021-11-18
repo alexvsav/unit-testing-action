@@ -1,8 +1,8 @@
-## Ponicode generated %nb_tests% unit-tests for you
+## Ponicode generated %nbTestFiles% Unit-Tests for you
 
-### The generated Unit-Tests have been pushed into the following Pull-Request: [Ponicode UT Bootstrap Pull-Request](%url%)
+%prLinkMessage%
 
-It contains the following Unit-Test files:
+%insightsMessage%
 
-%list_of_tests%
+%ctaMessage%
 
