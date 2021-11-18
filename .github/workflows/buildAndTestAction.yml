@@ -17,7 +17,7 @@ jobs:
         npm ci
         npm install -g @vercel/ncc
         npm run release
-        npm install -g @ponicode/cli-public@0.56.14
+        npm install -g ponicode
         npm i --save rewire @types/rewire jest@26 ts-jest@26 @types/jest
     - id: get_changed_files
       uses: jitterbit/get-changed-files@v1
