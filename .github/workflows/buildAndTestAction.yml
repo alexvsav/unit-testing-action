@@ -8,12 +8,11 @@ jobs:
   build_and_test:
     runs-on: ubuntu-latest
     env:
-      ENVIRONMENT: "PREPROD" # "PREPROD" | "PROD" (default)
-      NPM_AUTH_SECRET: ${{ secrets.NPM_AUTH_SECRET }} # for "PREPROD" env when specifying a private CLI package
+      ENVIRONMENT: "PROD" # "PREPROD" | "PROD" (default)
+      # NPM_AUTH_SECRET: ${{ secrets.NPM_AUTH_SECRET }} # for "PREPROD" env when specifying a private CLI package
     steps:
     - uses: actions/checkout@v1
     - run: |
-        cp .npmrc $HOME/
         npm ci
         npm install -g @vercel/ncc
         npm run release
@@ -33,6 +32,6 @@ jobs:
         repoURL: ${{github.repository}}
         impactedFiles: ${{ steps.get_changed_files.outputs.added_modified }}
         branch: ${{ steps.extract_branch.outputs.BRANCH_NAME }}
-        ponicodeUtToken: ${{ secrets.PONICODE_TOKEN_PREPROD }} # for PREPROD is ${{ secrets.PONICODE_TOKEN_PREPROD }} and ${{ secrets.PONICODE_TOKEN }} for PROD
+        ponicodeUtToken: ${{ secrets.PONICODE_TOKEN }} # for PREPROD is ${{ secrets.PONICODE_TOKEN_PREPROD }} and ${{ secrets.PONICODE_TOKEN }} for PROD
         githubToken: ${{ secrets.GITHUB_TOKEN }}
         commentUTs: "false"

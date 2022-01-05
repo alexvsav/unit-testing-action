@@ -47,7 +47,7 @@ export function execCommand(command: string, callback: () => void) {
     });
     execProcess.on("close", (code: number, args: any[]) => {
         core.debug(`spawn on close code: ${code} args: ${args}`);
-        if (code === 0) {
+        if ((code === 0) || (code === 130)) {
             callback();
         } else {
             core.debug("Command fails");
