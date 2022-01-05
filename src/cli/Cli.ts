@@ -55,9 +55,9 @@ class CLI {
                 // Check if the project already have a ponicode.config file.
                 // If not run ponicode test withotu dashboarding
                 if (checkIfPonicodeConfigFile()) {
-                    command = `INTERNAL_REPORT=1 ponicode --telemetry test --json -d ${fileArguments} > /dev/null`;
+                    command = `INTERNAL_REPORT=1 ponicode --telemetry test --json -d ${fileArguments}`;
                 } else {
-                    command = `ponicode --telemetry test ${fileArguments} --json > /dev/null`;
+                    command = `ponicode --telemetry test ${fileArguments} --json`;
                 }
 
                 // Add preprod env variables on command if needed

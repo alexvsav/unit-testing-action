@@ -51,8 +51,8 @@ export function execCommand(command: string, callback: () => void) {
             callback();
         } else {
             core.debug("Command fails");
-            generatePRComment(getOriginalPullRequestNumber(), "## Sorry, we couldn't generate the Unit-Tests for your files...\
-                Please try later", getWorkingRepo());
+            generatePRComment(getOriginalPullRequestNumber(), "## Sorry, we couldn't generate the Unit-Tests for your files.\
+                You should update your PONICODE_TOKEN in your secrets. It might have expired.", getWorkingRepo());
         }
     });
 }
