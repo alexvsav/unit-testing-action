@@ -8,7 +8,7 @@
 
 **Combined with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar)**, you can generate Unit-tests on files that require it based on Ponicode SQUAR report  
 
-# 💥 Benefits
+# 💥 Benefits.
 
 - __RAISE YOUR CODE QUALITY FAST__ - Accelerate the remediation of your code quality weaknesses on your high risk functions
 - __FIND YOUR PRIORITIES__ - Prioritise your code quality efforts by combining Ponicode Unit-Testing action together with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar)
