@@ -2,20 +2,20 @@
 <img src="https://ponicodefilesstorage.blob.core.windows.net/githubaction/Couv_readme-Ponicode-Unit-Testing_GA.png">
 
 # 🦄 Automatically writes unit tests for your project🦄
-**Ponicode Unit-Testing GitHub Action** is an action that automatically raises your testing coverage by generating the Unit-Tests of your files in all you Pull-Requests!
+**Ponicode Unit Test GitHub Action** is an action that automatically raises your testing coverage by generating the Unit-Tests of your files in all you Pull-Requests!
 
-**Ponicode Unit-Testing GitHub Action** is the newest tool on the Ponicode platform to accelerate developers on their code quality journey
+**Ponicode Unit Test GitHub Action** is the newest tool on the Ponicode platform to accelerate developers on their code quality journey
 
 **Combined with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar)**, you can generate Unit-tests on files that require it based on Ponicode SQUAR report  
 
-# 💥 Benefits.
+# 💥 Benefits
 
 - __RAISE YOUR CODE QUALITY FAST__ - Accelerate the remediation of your code quality weaknesses on your high risk functions
-- __FIND YOUR PRIORITIES__ - Prioritise your code quality efforts by combining Ponicode Unit-Testing action together with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar)
+- __FIND YOUR PRIORITIES__ - Prioritize your code quality efforts by combining Ponicode Unit Test action together with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar)
 
 
 # 🔎 How does it work
-- Ponicode Unit-Testing GitHub Action enables you to accelerate your coverage catch-up by generating missing unit tests, test cases and edge cases on your PR files.
+- Ponicode Unit Test GitHub Action enables you to accelerate your coverage catch-up by generating missing unit tests, test cases and edge cases on your PR files.
 
 # 😳 Why should I use this GitHub Action
 - Keep your codebase at a high test coverage
@@ -28,7 +28,7 @@
 npm install -g ponicode
 ponicode init
 ```
-In case you develop in a language that is supported by Ponicode TurboCov Dashboard, those commands will create a ```ponicode.config.json```. This file have to be indexed in your git repo. It permits you to have all your code quality insights available in your TurboCov Dashboard [here](https://app.ponicode.com/turbo-cov/projects/)
+In case you develop in a language that is supported by Ponicode TurboCov Dashboard, those commands will create a ```ponicode.config.json```. This file has to be indexed in your git repo. It permits you to have all your code quality insights available in your TurboCov Dashboard [here](https://app.ponicode.com/turbo-cov/projects/)
 
 ### If it does not exist, create a yaml workflow file in your project
 
@@ -65,7 +65,7 @@ jobs:
       if: github.event_name == 'pull_request'
       run: echo "::set-output name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
     
-    # Run Ponicode Unit-Testing Action
+    # Run Ponicode Unit Test Action
     - uses: ponicode/unit-testing-action@master
       with:
         repoURL: ${{github.repository}} # DO NOT MODIFY
@@ -84,11 +84,11 @@ jobs:
 ![SQUAR + Unit-test generation workflow](https://ponicodefilesstorage.blob.core.windows.net/githubaction/ezgif.com-gif-maker.gif)
 
 
-### Ponicode Unit-Testing Action parameters
+### Ponicode Unit Test Action parameters
 | Name | Description | Required | Default |
 |------|-------------|----------|---------|
 | ``ponicodeUtToken`` | This parameter has to be configured as **``PONICODE_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode UT Generation App](https://app.ponicode.com/github-actions/token). | Yes if ``bootstrapUT`` is set to ``true``, No if not | No default. This parameter has to be set-up in your GITHUB SECRETS (see below on how to do that) |
-| ``impactedFiles`` | Indicate on which files, Unit-Tests have to be generated | Yes | Default value is the ouput of ``get-changed-files`` step. When Combined with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar), the parameter is ``${{ steps.ponicode_squar.outputs.impacted_files }}`` |
+| ``impactedFiles`` | Indicate on which files, Unit-Tests have to be generated | Yes | Default value is the output of ``get-changed-files`` step. When Combined with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar), the parameter is ``${{ steps.ponicode_squar.outputs.impacted_files }}`` |
 | ``commentUTs`` | Set to ``"true"`` to comment the genrated Unit-Tests, ``"false"`` if not. | Yes | Set to ``"false"`` by default. | 
 | ``githubToken`` | **Required if Ponicode SQUAR is activated** This parameter has to be configured as **``GITHUB_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode SQUAR App](https://squar.ponicode.com/token). | Required if you want SQUAR analysis to be activated | No default. This parameter has to be set-up in your GITHUB SECRETS (see below on how to do that) |
 
@@ -100,7 +100,7 @@ jobs:
 **NB2: you can find the procedure on how to setup Github Secrets here**: [Github Secrets setup](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
 
 # 👩‍💻 Use-Cases
-Here are some examples of ```.github/workflows/ponicode.yml``` file to setup Ponicode Unit-Testing Action
+Here are some examples of ```.github/workflows/ponicode.yml``` file to setup Ponicode Unit Test Action
 #### 1. Raises Tests Quality alerts and bootstrap remediation Unit-Tests on each created / updated PR. Also includes Ponicode SQUAR report for the whole project.
 ```yaml
 name: "ponicode-ci"
@@ -159,7 +159,7 @@ jobs:
 |------|-------------|----------|---------|
 | ``ponicodeUtToken`` | This parameter has to be configured as **``PONICODE_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode UT Generation App](https://app.ponicode.com/github-actions/token). | Yes if ``bootstrapUT`` is set to ``true``, No if not | No default. This parameter has to be set-up in your GITHUB SECRETS (see below on how to do that) |
 | ``githubToken`` | This parameter has to be configured as **``GITHUB_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode SQUAR App](https://squar.ponicode.com/token). | Required if you want SQUAR analysis to be activated | No default. This parameter has to be set-up in your GITHUB SECRETS (see below on how to do that) |
-| ``impactedFiles`` | Indicate on which files, Unit-Tests have to be generated | Yes | Default value is the ouput of ``get-changed-files`` step. When Combined with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar), the parameter is ``${{ steps.ponicode_squar.outputs.impacted_files }}`` |
+| ``impactedFiles`` | Indicate on which files, Unit-Tests have to be generated | Yes | Default value is the output of ``get-changed-files`` step. When Combined with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar), the parameter is ``${{ steps.ponicode_squar.outputs.impacted_files }}`` |
 | ``commentUTs`` | Set to ``"true"`` to comment the genrated Unit-Tests, ``"false"`` if not. | Yes | Set to ``"false"`` by default. | 
 
 **NB: all the other parameters must be let un-changed, since they are automatically filled-in from previous steps in the workflow**
@@ -206,11 +206,11 @@ jobs:
         impactedFiles: ${{ steps.get_changed_files.outputs.added_modified }} # DO NOT MODIFY IF YOU WANT TO GENERATE TESTS ON SQUAR OUTCOME ONLY
         commentUTs: "false"
 ```
-##### Gihub Action parameters
+##### GitHub Action parameters
 | Name | Description | Required | Default |
 |------|-------------|----------|---------|
 | ``ponicodeUtToken`` | This parameter has to be configured as **``PONICODE_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode UT Generation App](https://app.ponicode.com/github-actions/token). | Yes if ``bootstrapUT`` is set to ``true``, No if not | No default. This parameter has to be set-up in your GITHUB SECRETS (see below on how to do that) |
-| ``impactedFiles`` | Indicate on which files, Unit-Tests have to be generated | Yes | Default value is the ouput of ``get-changed-files`` step. When Combined with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar), the parameter is ``${{ steps.ponicode_squar.outputs.impacted_files }}`` |
+| ``impactedFiles`` | Indicate on which files, Unit-Tests have to be generated | Yes | Default value is the output of ``get-changed-files`` step. When Combined with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar), the parameter is ``${{ steps.ponicode_squar.outputs.impacted_files }}`` |
 | ``commentUTs`` | Set to ``"true"`` to comment the genrated Unit-Tests, ``"false"`` if not. | Yes | Set to ``"false"`` by default. | 
 
 **NB: all the other parameters must be let un-changed, since they are automatically filled-in from previous steps in the workflow**
@@ -221,7 +221,7 @@ jobs:
 **NB2: you can find the procedure on how to setup Github Secrets here**: [Github Secrets setup](https://docs.github.com/en/actions/security-guides/
 
 # 🧐 Examples of SQUAR reporting in Pull-Requests
-When combining [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar) together with Ponicode Unit-Testing Action in your workflow, you get immediate feedbacks on the quality of your tests for the files impacted by the PR:
+When combining [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar) together with Ponicode Unit Test Action in your workflow, you get immediate feedbacks on the quality of your tests for the files impacted by the PR:
 ### List of Testing Quality alerts on files impacted by a PR
 ![Ponicode SQUAR for Delta](https://ponicodefilesstorage.blob.core.windows.net/githubaction/SQUAR_ACTION_on_delta.png)
 ### Ponicode SQUAR report on the whole project
@@ -237,7 +237,7 @@ Ponicode research and development work enables us to fine tune a proprietary for
 
 
 # ⽭ Supported languages and frameworks
-| Languague | Test Framework |
+| Language | Test Framework |
 |------|-------------|
 | TypeScript | [Jest](https://jestjs.io/) |
 | Javascript | [Jest](https://jestjs.io/) |
@@ -246,23 +246,23 @@ Ponicode research and development work enables us to fine tune a proprietary for
 # 📄 Terms of use
 By using this action, you will have to register on the [Ponicode platform](https://app.ponicode.com). The terms & conditions of both apply when using this Github Action.
 
-**highlights to our Terms & Conditions**
+**Highlights to our Terms & Conditions**
 - Ponicode does not store your code
 - Ponicode use anonymous usage data to improve your experience 
 
 # Bug and feature Request
-Have a bug or a feature request? Please open a new [issue](https://github.com/ponicode/unit-testing-action/issues) or reach out to us on the Ponicode Slack community https://ponicode-community.slack.com/join/shared_invite/zt-fiq4fhkg-DE~a_FkJ7xtiZxW7efyA4Q#/ using the channel #help or #feedback starting your message with “Ponicode Unit-Testing GitHub Action”
+Have a bug or a feature request? Please open a new [issue](https://github.com/ponicode/unit-testing-action/issues) or reach out to us on the Ponicode Slack community https://ponicode-community.slack.com/join/shared_invite/zt-fiq4fhkg-DE~a_FkJ7xtiZxW7efyA4Q#/ using the channel #help or #feedback starting your message with “Ponicode Unit Test GitHub Action”
 
 We would love to have your feedback! Tell us what you love and what you want us to improve about this action!
 
 # 👯‍♀️ Community
-Our slack community is a place where people not only give feedback and get support but also an opportunity to share information and best ractices about code quality. It’s also where you will get premium access to our new products and first hand information about our latest releases. Join us here: https://ponicode-community.slack.com/join/shared_invite/zt-fiq4fhkg-DE~a_FkJ7xtiZxW7efyA4Q#/
+Our slack community is a place where people not only give feedback and get support but also an opportunity to share information and best practices about code quality. It’s also where you will get premium access to our new products and first hand information about our latest releases. Join us here: https://ponicode-community.slack.com/join/shared_invite/zt-fiq4fhkg-DE~a_FkJ7xtiZxW7efyA4Q#/
 
 
 # Learn More
 Want to find out more about our project? All our solutions are available on [ponicode.com](https://ponicode.com)
 
-You can generate a [Ponicode SQUAR](https://squar.ponicode.com) report for any of your GitHub report straight from our platform. Get started on [Ponicode SQUAR Self Assessment](https://www.ponicode.com/squar-self-assessment)
+You can generate a [Ponicode SQUAR](https://squar.ponicode.com) report for any of your GitHub repositories straight from our platform. Get started on [Ponicode SQUAR Self Assessment](https://www.ponicode.com/squar-self-assessment)
 
 We also offer a unique [VS Code Extension](https://marketplace.visualstudio.com/items?itemName=ponicode.ponicode) to accelerate your unit testing efforts. 
 
