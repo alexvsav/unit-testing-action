@@ -6,7 +6,7 @@
 
 **Ponicode Unit Test GitHub Action** is the newest tool on the Ponicode platform to accelerate developers on their code quality journey
 
-**Combined with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar)**, you can generate Unit-tests on files that require it based on Ponicode SQUAR report  
+**Combined with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar)**, you can generate Unit-tests on files that require it based on Ponicode SQUAR report that identifies the most critical part of your code that should be tested. 
 
 # 💥 Benefits
 
@@ -97,7 +97,14 @@ jobs:
 - ``branch``
 - ``githubToken``
 
-**NB2: you can find the procedure on how to setup Github Secrets here**: [Github Secrets setup](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
+**NB2: you can find the procedure on how to setup Github Secrets here**: [Github Secrets setup](https://docs.github.com/en/actions/security-guides/encrypted-secrets). Here is an overview:
+To add the Ponicode token to your github secrets follow these steps:
+
+- Open your project on Github
+- Click on Settings
+- Click on Secrets
+- Click on New Secret
+- Name: PONICODE_TOKEN, Value: (Paste the token you got previously)
 
 # 👩‍💻 Use-Cases
 Here are some examples of ```.github/workflows/ponicode.yml``` file to setup Ponicode Unit Test Action
