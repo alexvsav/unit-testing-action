@@ -61,7 +61,7 @@ class PullRequest {
           body: await Markdown.createUTPRComment(undefined, cliReport),
           base: inputs.branch /* optional: defaults to default branch */,
           head: getPRBranchName(inputs),
-          draft: true,
+          draft: false,
           changes: [
             {
               /* optional: if `files` is not passed, an empty commit is created instead */
