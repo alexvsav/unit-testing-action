@@ -87,7 +87,7 @@ jobs:
 ### Ponicode Unit Test Action parameters
 | Name | Description | Required | Default |
 |------|-------------|----------|---------|
-| ``ponicodeUtToken`` | This parameter has to be configured as **``PONICODE_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode UT Generation App](https://app.ponicode.com/github-actions/token). | Yes if ``bootstrapUT`` is set to ``true``, No if not | No default. This parameter has to be set-up in your GITHUB SECRETS (see below on how to do that) |
+| ``ponicodeUtToken`` | This parameter has to be configured as **``PONICODE_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode UT Generation App](https://app.ponicode.com/home). | Yes if ``bootstrapUT`` is set to ``true``, No if not | No default. This parameter has to be set-up in your GITHUB SECRETS (see below on how to do that) |
 | ``impactedFiles`` | Indicate on which files, Unit-Tests have to be generated | Yes | Default value is the output of ``get-changed-files`` step. When Combined with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar), the parameter is ``${{ steps.ponicode_squar.outputs.impacted_files }}`` |
 | ``commentUTs`` | Set to ``"true"`` to comment the genrated Unit-Tests, ``"false"`` if not. | Yes | Set to ``"false"`` by default. | 
 | ``githubToken`` | **Required if Ponicode SQUAR is activated** This parameter has to be configured as **``GITHUB_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode SQUAR App](https://squar.ponicode.com/token). | Required if you want SQUAR analysis to be activated | No default. This parameter has to be set-up in your GITHUB SECRETS (see below on how to do that) |
@@ -164,7 +164,7 @@ jobs:
 ##### Gihub Action parameters
 | Name | Description | Required | Default |
 |------|-------------|----------|---------|
-| ``ponicodeUtToken`` | This parameter has to be configured as **``PONICODE_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode UT Generation App](https://app.ponicode.com/github-actions/token). | Yes if ``bootstrapUT`` is set to ``true``, No if not | No default. This parameter has to be set-up in your GITHUB SECRETS (see below on how to do that) |
+| ``ponicodeUtToken`` | This parameter has to be configured as **``PONICODE_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode UT Generation App](https://app.ponicode.com/home). | Yes if ``bootstrapUT`` is set to ``true``, No if not | No default. This parameter has to be set-up in your GITHUB SECRETS (see below on how to do that) |
 | ``githubToken`` | This parameter has to be configured as **``GITHUB_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode SQUAR App](https://squar.ponicode.com/token). | Required if you want SQUAR analysis to be activated | No default. This parameter has to be set-up in your GITHUB SECRETS (see below on how to do that) |
 | ``impactedFiles`` | Indicate on which files, Unit-Tests have to be generated | Yes | Default value is the output of ``get-changed-files`` step. When Combined with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar), the parameter is ``${{ steps.ponicode_squar.outputs.impacted_files }}`` |
 | ``commentUTs`` | Set to ``"true"`` to comment the genrated Unit-Tests, ``"false"`` if not. | Yes | Set to ``"false"`` by default. | 
@@ -216,7 +216,7 @@ jobs:
 ##### GitHub Action parameters
 | Name | Description | Required | Default |
 |------|-------------|----------|---------|
-| ``ponicodeUtToken`` | This parameter has to be configured as **``PONICODE_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode UT Generation App](https://app.ponicode.com/github-actions/token). | Yes if ``bootstrapUT`` is set to ``true``, No if not | No default. This parameter has to be set-up in your GITHUB SECRETS (see below on how to do that) |
+| ``ponicodeUtToken`` | This parameter has to be configured as **``PONICODE_TOKEN``** in Repository Github Secrets. The token can be retrieved on [Ponicode UT Generation App](https://app.ponicode.com/home). | Yes if ``bootstrapUT`` is set to ``true``, No if not | No default. This parameter has to be set-up in your GITHUB SECRETS (see below on how to do that) |
 | ``impactedFiles`` | Indicate on which files, Unit-Tests have to be generated | Yes | Default value is the output of ``get-changed-files`` step. When Combined with [Ponicode SQUAR Action](https://github.com/marketplace/actions/ponicode-squar), the parameter is ``${{ steps.ponicode_squar.outputs.impacted_files }}`` |
 | ``commentUTs`` | Set to ``"true"`` to comment the genrated Unit-Tests, ``"false"`` if not. | Yes | Set to ``"false"`` by default. | 
 
