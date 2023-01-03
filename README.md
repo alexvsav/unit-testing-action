@@ -278,3 +278,5 @@ We also offer a unique [VS Code Extension](https://marketplace.visualstudio.com/
 Our AI-powered unit testing bulk generation is also available in the command line interface. Go discover our [npm package](https://www.npmjs.com/package/ponicode) today! 
 
 We also have a [docstring generating GitHub Action](https://github.com/marketplace/actions/ponicode-dogstring-automatic-ai-based-docstring-generation) for Python 
+  
+  © 2023 Circle Internet Services, Inc.
